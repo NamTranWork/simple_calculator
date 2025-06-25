@@ -1,0 +1,14 @@
+#resultText {
+    font-weight: bold;
+    font-size: 32px;
+}
+
+.calButton {
+    width: 64px;
+    height: 64px;
+    color: white;
+    background-color: #474747;
+    font-weight: bolder;
+    font-size: 24px;
+    border-radius: 20%;
+}
