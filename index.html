@@ -6,36 +6,44 @@
         <title>Nam's Simple Calculator Project</title>
     </head>
     <body>
-        <p id="entryText"></p>
-        <p id="resultText">0</p>
-        <div class="buttonRow">
-            <button class="calButton" id="clearButton">C</button>
-            <button class="calButton" id="deleteButton">DEL</button>
+        <h1 id="titleText">Nam's Calculator Project</h1>
+        <div class="calcSection">
+            <div class="textSection">
+                <span id="entryText"></span>
+                <span id="resultText">0</span>
+            </div>
+            <div class="btnSection">
+                <div class="buttonRow" id="row1">
+                    <button class="calButton ctrlBtn" id="clearButton">C</button>
+                    <button class="calButton ctrlBtn" id="deleteButton">DEL</button>
+                </div>
+                <div class="buttonRow" id="row2">
+                    <button class="calButton numBtn" id="sevenButton">7</button>
+                    <button class="calButton numBtn" id="eightButton">8</button>
+                    <button class="calButton numBtn" id="nineButton">9</button>
+                    <button class="calButton operBtn" id="divideButton">/</button>
+                </div>
+                <div class="buttonRow" id="row3">
+                    <button class="calButton numBtn" id="fourButton">4</button>
+                    <button class="calButton numBtn" id="fiveButton">5</button>
+                    <button class="calButton numBtn" id="sixButton">6</button>
+                    <button class="calButton operBtn" id="multiplyButton">*</button>
+                </div>
+                <div class="buttonRow" id="row4">
+                    <button class="calButton numBtn" id="oneButton">1</button>
+                    <button class="calButton numBtn" id="twoButton">2</button>
+                    <button class="calButton numBtn" id="threeButton">3</button>
+                    <button class="calButton operBtn" id="subtractButton">-</button>
+                </div>
+                <div class="buttonRow" id="row5">
+                    <button class="calButton numBtn" id="dotButton">.</button>
+                    <button class="calButton numBtn" id="zeroButton">0</button>
+                    <button class="calButton" id="equalButton">=</button>
+                    <button class="calButton operBtn" id="addButton">+</button>
+                </div>
+            </div>
         </div>
-        <div class="buttonRow">
-            <button class="calButton" id="sevenButton">7</button>
-            <button class="calButton" id="eightButton">8</button>
-            <button class="calButton" id="nineButton">9</button>
-            <button class="calButton" id="divideButton">/</button>
-        </div>
-        <div class="buttonRow">
-            <button class="calButton" id="fourButton">4</button>
-            <button class="calButton" id="fiveButton">5</button>
-            <button class="calButton" id="sixButton">6</button>
-            <button class="calButton" id="multiplyButton">*</button>
-        </div>
-        <div class="buttonRow">
-            <button class="calButton" id="oneButton">1</button>
-            <button class="calButton" id="twoButton">2</button>
-            <button class="calButton" id="threeButton">3</button>
-            <button class="calButton" id="subtractButton">-</button>
-        </div>
-        <div class="buttonRow">
-            <button class="calButton" id="dotButton">.</button>
-            <button class="calButton" id="zeroButton">0</button>
-            <button class="calButton" id="equalButton">=</button>
-            <button class="calButton" id="addButton">+</button>
-        </div>
+        
         <script src="calculator.js"></script>
     </body>
 </html>

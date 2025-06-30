@@ -18,29 +18,48 @@ function divide(a, b) {
 }
 
 function operate(operator, op1, op2) {
+    let result;
     switch (operator) {
         case "+":
-            return add(op1, op2);
+            result = add(op1, op2);
+            break;
         case "-":
-            return subtract(op1, op2);
+            result = subtract(op1, op2);
+            break;
         case "*":
-            return multiply(op1, op2);
+            result = multiply(op1, op2);
+            break;
         case "/":
-            return divide(op1, op2);
+            result = divide(op1, op2);
+            break;
         default:
-            return op2;
+            result = op2;
     }
+
+    // Handle divide-by-zero string case
+    if (typeof result === "number") {
+        // Round to 3 decimal places
+        return Math.round(result * 1000) / 1000;
+    }
+    return result;
 }
+
 
 function handleClear() {
     relMessage.textContent = "0";
     histMessage.textContent = "";
     total = 0;
     operator = "=";
+    restart = false;
 }
 
 function handleDelete() {
-    if (relMessage.textContent.length === 1) {
+    if (restart === true) {
+        operator = "=";
+        histMessage.textContent = "";
+        restart = false;
+    }
+    else if (relMessage.textContent.length === 1) {
         relMessage.textContent = "0";
     } else {
         relMessage.textContent = relMessage.textContent.slice(0, -1);
@@ -49,21 +68,30 @@ function handleDelete() {
 
 function handleEqual() {
     let operand1 = total
-    operand2 = +(relMessage.textContent);
-    total = operate(operator, operand1, operand2);
-    if (operator === "=") {
-        histMessage.textContent = `${operand1} =`;
-    } else {
-        histMessage.textContent = `${operand1} ${operator} ${operand2} =`;
+    if (restart === false) {
+        operand2 = +(relMessage.textContent);
     }
-    relMessage.textContent = total;
-    operator = "=";
-    holdValue = true;
-    numLock = true;
+    total = operate(operator, operand1, operand2);
+
+    if (total === "Cannot divide by 0") {
+        alert("Cannot divide by 0");
+        handleClear();
+    } else {
+        if (operator === "=") {
+            histMessage.textContent = `${operand1} =`;
+        } else {
+            histMessage.textContent = `${operand1} ${operator} ${operand2} =`;
+        }
+        relMessage.textContent = total;
+        holdValue = true;
+        numLock = true;
+        restart = true;
+    }
 }
 
 function handleOperator(oper) {
     operand2 = +(relMessage.textContent);
+    restart = false;
     if (holdValue === false) {
         total = operate(operator, total, operand2);
         holdValue = true;
@@ -83,10 +111,21 @@ function handleOperator(oper) {
             operator = "/";
             break;
     }
-    histMessage.textContent = `${total} ${operator}`;
+
+    if (total === "Cannot divide by 0") {
+        alert("Cannot divide by 0");
+        handleClear();
+    } else {
+        histMessage.textContent = `${total} ${operator}`;
+        relMessage.textContent = `${total}`;
+    }
 }
 
 function handleNumber(stringNum) {
+    if (restart === true) {
+        handleClear();
+    }
+
     if (relMessage.textContent === "0") {
         if (stringNum === "0") {
             relMessage.textContent = "0";
@@ -97,11 +136,12 @@ function handleNumber(stringNum) {
         if (numLock === true) {
             relMessage.textContent = stringNum;
             numLock = false;
-        } else {
+        } else if (relMessage.textContent.length < 13) {
             relMessage.textContent += stringNum;
         }
     }
     holdValue = false;
+    restart = false;
 }
 
 function handleDot() {
@@ -138,22 +178,27 @@ const sevenButton = document.querySelector("#sevenButton");
 const eightButton = document.querySelector("#eightButton");
 const nineButton = document.querySelector("#nineButton");
 
+// Global variables
 let operator = "=";
 let operand2 = null;
 let total = 0;
 let holdValue = true;
 let numLock = false;
+let restart = false;
 
+// Control event handlers
 clearButton.addEventListener("click", () => handleClear());
 deleteButton.addEventListener("click",() => handleDelete());
 dotButton.addEventListener("click", () => handleDot());
 equalButton.addEventListener("click", () => handleEqual());
 
+// Operator event handlers
 addButton.addEventListener("click", () => handleOperator("+"));
 subtractButton.addEventListener("click", () => handleOperator("-"));
 multiplyButton.addEventListener("click", () => handleOperator("*"));
 divideButton.addEventListener("click", () => handleOperator("/"))
 
+// Number event handlers
 zeroButton.addEventListener("click", () => handleNumber("0"));
 oneButton.addEventListener("click", () => handleNumber("1"));
 twoButton.addEventListener("click", () => handleNumber("2"));
@@ -164,3 +209,35 @@ sixButton.addEventListener("click", () => handleNumber("6"));
 sevenButton.addEventListener("click", () => handleNumber("7"));
 eightButton.addEventListener("click", () => handleNumber("8"));
 nineButton.addEventListener("click", () => handleNumber("9"));
+
+// Keybinds
+document.addEventListener("keydown", (event) => {
+    const key = event.key;
+
+    if (!isNaN(key)) {
+        handleNumber(key);
+    } else {
+        switch (key) {
+            case "+":
+            case "-":
+            case "*":
+            case "/":
+                handleOperator(key);
+                break;
+            case "Enter":
+            case "=":
+                event.preventDefault(); // Prevent form submission if any
+                handleEqual();
+                break;
+            case "Backspace":
+                handleDelete();
+                break;
+            case "Escape":
+                handleClear();
+                break;
+            case ".":
+                handleDot();
+                break;
+        }
+    }
+});
